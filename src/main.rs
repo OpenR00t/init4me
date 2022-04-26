@@ -29,7 +29,7 @@ pub fn initCplus(proj_name:String) {
     init_dir.status().expect("process failed to execute");
     //makes initialization directory
     let mut new_subdir = Command::new("mkdir");
-    new_subdir.arg("/{}/bin", proj_name);
+    new_subdir.arg("/{}/bin", proj_name); //can't parametrically declare dir?
     new_subdir.arg("src");
     new_subdir.arg("lib");
     new_subdir.arg("include");
