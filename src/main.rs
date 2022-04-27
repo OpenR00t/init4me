@@ -27,25 +27,45 @@ pub fn initCplus(proj_name:String) {
     let mut init_dir = Command::new("mkdir");
     init_dir.arg(&proj_name);
     init_dir.status().expect("process failed to execute");
+    //change into project directory
+    let mut chng_proj = Command::new("cd");
+    chng_proj.arg(proj_name);
+    chng_proj.status().expect("process failed to execute");
     //makes initialization directory
     let mut new_subdir = Command::new("mkdir");
-    new_subdir.arg("/{}/bin", proj_name); //can't parametrically declare dir?
+    new_subdir.arg("bin"); //can't parametrically declare dir?
     new_subdir.arg("src");
     new_subdir.arg("lib");
     new_subdir.arg("include");
     new_subdir.status().expect("process failed to execute");
     //change to src directory
-    let mut chng_src = Command::new("cd");
-    chng_src.arg("src");
-    chng_src.status().expect("process failed to execute");
+    let mut create = Command::new("touch");
+    create.arg("/src/main.cpp");
+    create.arg("/include/main.h");
+    create.status().expect("process failed to execute");
 
     
 }
 pub fn initPython(proj_name:String) {
-    println!("To implement Python {}", proj_name);
+    let mut init_dir = Command::new("mkdir");
+    init_dir.arg(&proj_name);
+    init_dir.status().expect("process failed to execute");
+    let mut chng_proj = Command::new("cd");
+    chng_proj.arg(&proj_name);
+    //initialize filename with a scuffed workaround
+    let mut owned_string:String = proj_name.to_owned();
+    let file_ext: &str = ".py";
+    owned_string.push_str(file_ext);
+    //create the file in project directory
+    let mut create = Command::new("touch");
+    create.arg(owned_string);
+    create.status().expect("process failed to execute");
+    
 }
 pub fn initJavaScript(proj_name:String) {
     println!("To implement JavaScript {}", proj_name);
+    //plan to add a decision tree
+    //node, react, typescript, etc...
 }
 pub fn initCsharp(proj_name:String) {
     println!("To implement C# {}", proj_name);
@@ -64,7 +84,7 @@ fn main() {
     let javascript_lang = String::from("javascript");
     let csharp_lang = String::from("c#");
 
-    match args.lang {
+    match args.lang { //every language keyword just uses cargo??
         rust_lang => initRust(args.name.to_lowercase()),
         cplus_lang => initCplus(args.name.to_lowercase()),
         python_lang => initPython(args.name.to_lowercase()),
