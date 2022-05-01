@@ -6,7 +6,6 @@ use std::fs;
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
-    //TODO: #5 change argument format to one flag per language rather than string matching
     /// name of the language to initialize:
     /// rust, c++, python
     #[clap(short, long)]
