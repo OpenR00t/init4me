@@ -1,13 +1,14 @@
 use ::clap::Parser;
+use ::colored::*;
 use ::std::process::Command;
 use std::fs;
-use::colored::*;
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
-    /// name of the language to initialize
-    /// rust, c++, python, javscript, c#
+    //TODO: #5 change argument format to one flag per language rather than string matching
+    /// name of the language to initialize:
+    /// rust, c++, python
     #[clap(short, long)]
     lang: String,
 
@@ -21,11 +22,9 @@ pub fn init_rust(proj_name: String) {
     rust_init.arg("new");
     rust_init.arg(proj_name);
     rust_init.status().expect("process failed to execute");
-    //let rust_init_out = rust_init.output();
-    //println!("To implement Rust {}", proj_name);
 }
-pub fn init_cplus(proj_name: String) -> std::io::Result<()> { 
-    //TODO: maybe make the paths a vector and have it create by iteration?
+pub fn init_cplus(proj_name: String) -> std::io::Result<()> {
+    //TODO: #4 maybe make the paths a vector and have it create by iteration?
     let src_path = format!("./{}/src/{}.cpp", proj_name, proj_name);
     let bin_path = format!("./{}/bin", proj_name);
     let include_path = format!("./{}/include/{}.h", proj_name, proj_name);
@@ -34,26 +33,34 @@ pub fn init_cplus(proj_name: String) -> std::io::Result<()> {
     fs::create_dir_all(bin_path).unwrap();
     fs::create_dir_all(include_path).unwrap();
     fs::create_dir_all(lib_path).unwrap();
-    //println!("{}: {} was successfuly intialized", "Created".green().bold(), proj_name.bold());
-    Ok(println!("{}: {} was successfuly intialized as C++", "Created".green().bold(), proj_name.bold()))
+    Ok(println!(
+        "{}: {} was successfuly intialized as C++",
+        "Created".green().bold(),
+        proj_name.bold()
+    ))
 }
-pub fn init_py(proj_name: String) -> std::io::Result<()> { 
+pub fn init_py(proj_name: String) -> std::io::Result<()> {
     fs::create_dir_all(format!("./{}/{}.py", proj_name, proj_name)).unwrap();
-    println!("{}: {} was successfuly intialized", "Created".green().bold(), proj_name.bold());
+    println!(
+        "{}: {} was successfuly intialized as Python",
+        "Created".green().bold(),
+        proj_name.bold()
+    );
     Ok(())
 }
-pub fn init_js(proj_name: String) { 
+pub fn init_js(proj_name: String) {
     println!("To implement JavaScript {}", proj_name);
-    //TODO: implement javascript initialization with node, react, typescript modifiers
+    //TODO: #2 implement javascript initialization with node, react, typescript modifiers
 }
-pub fn init_csharp(proj_name: String) { //TODO: implement c# initialization
+pub fn init_csharp(proj_name: String) {
     println!("To implement C# {}", proj_name);
-    //TODO: implement c# initialization
+    //TODO: #3 implement c# initialization
 }
-pub fn invalid_lang(proj_lang: &str, proj_name: String) { 
+pub fn invalid_lang(proj_lang: &str, proj_name: String) {
     println!(
         "{} is not yet implemented. Cannot initialize {}",
-        proj_lang, proj_name
+        proj_lang.red().bold(),
+        proj_name.bold()
     );
 }
 
@@ -69,5 +76,6 @@ fn main() -> std::io::Result<()> {
         "c#" => init_csharp(args.name),
         _ => invalid_lang(lang_name, args.name),
     }
+    //TODO: #1 Figure out error handling, currently outputs created message no matter what
     Ok(())
 }
